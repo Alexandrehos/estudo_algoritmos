@@ -141,3 +141,53 @@ Aqui ele faz exatamente isso. Percorre o array e ve se tem algum valor diferente
   - Complexidade de memória: O(1)
 
 ## 2.3 - [Two Sum](https://leetcode.com/problems/two-sum/description/)
+
+Nesse exercício a gente recebe um array de números e precisamos retornar o índice de 2 desses números que somadam sejam iguais a um valor alvo. O array pode ter valores repetidos, a gente não pode usar 2 vezes o mesmo valor para chegar a soma, e sempre vai existir apenas uma solução. Abaixo a solução (posteriormente a explicação):
+
+```kt
+class TwoSum {
+    fun twoSum(nums: IntArray, target: Int): IntArray {
+        val numIndex = mutableMapOf<Int, Int>()
+        for ((i, n) in nums.withIndex()) {
+            val difference = target - n
+            if(numIndex.containsKey(difference)){
+                return intArrayOf(i, numIndex[difference]!!)
+            }
+            numIndex[n] = i
+        }
+        return intArrayOf()
+    }
+}
+```
+
+---
+
+Nesse exercício temos algumas soluções interessantes. A solução menos interessante é a de brute force, que só roda o array duas vezes com um loop nestado no outro. Ai temos a primeira, usando um sort:
+
+```kt
+class Solution {
+    fun twoSum(nums: IntArray, target: Int): IntArray {
+        val A = nums.mapIndexed { index, num -> num to index }.toMutableList()
+        A.sortBy { it.first }
+
+        var i = 0
+        var j = nums.size - 1
+        while (i < j) {
+            val cur = A[i].first + A[j].first
+            if (cur == target) {
+                return intArrayOf(
+                    minOf(A[i].second, A[j].second),
+                    maxOf(A[i].second, A[j].second)
+                )
+            } else if (cur < target) {
+                i++
+            } else {
+                j--
+            }
+        }
+        return intArrayOf()
+    }
+}
+```
+
+Ele cria um hash map para armazenar os índices. Depois ele da um sort. E ai a gente tem o pulo do gato, ele pega dois ponteiros, um no começo do array e outro no final, e ai vai caminhando um em direção ao outro, até encontrar a soluçãoi.
